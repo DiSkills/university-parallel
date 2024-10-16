@@ -1,4 +1,6 @@
 #include <cstdlib>
+#include <cstring>
+#include <thread>
 
 #ifdef DEBUG
 #include <iostream>
@@ -50,6 +52,93 @@ void array_sort(int *array, int left, int right)
     if (l < right) {
         array_sort(array, l, right);
     }
+}
+
+
+static void merge(int *array, int asz, int bsz)
+{
+    int *tmp = new int[asz + bsz];
+    memcpy(tmp, array, (asz + bsz) * sizeof(int));
+
+    int *a = tmp,
+        *b = tmp + asz;
+
+    int i = 0,
+        j = 0,
+        k = 0;
+
+    while (i < asz && j < bsz) {
+        if (a[i] < b[j]) {
+            array[k] = a[i];
+            i++;
+        } else {
+            array[k] = b[j];
+            j++;
+        }
+        k++;
+    }
+
+    for (; i < asz; i++, k++) {
+        array[k] = a[i];
+    }
+
+    for (; j < bsz; j++, k++) {
+        array[k] = b[j];
+    }
+
+    delete[] tmp;
+}
+
+
+static void parallel_merge(int *array, int size,
+        std::thread *thrds, int thrdcnt, int blksz)
+{
+    while (thrdcnt > 1) {
+        thrdcnt /= 2;
+
+        int start = 0;
+        for (int i = 0; i < thrdcnt - 1; i++) {
+            thrds[i] = std::thread(merge, array + start, blksz, blksz);
+            start += 2 * blksz;
+        }
+        thrds[thrdcnt - 1] = std::thread(merge,
+                array + start, blksz, size - start - blksz);
+
+        for (int i = 0; i < thrdcnt; i++) {
+            thrds[i].join();
+        }
+        blksz *= 2;
+    }
+}
+
+
+void parallel_sort(int *array, int size)
+{
+    int thrdcnt = std::thread::hardware_concurrency();
+    if (!thrdcnt) {
+        thrdcnt = 1;
+    }
+
+    int blksz = size / thrdcnt;
+    std::thread *thrds = new std::thread[thrdcnt];
+
+    int start = 0,
+        end = blksz - 1;
+    for (int i = 0; i < thrdcnt - 1; i++) {
+        thrds[i] = std::thread(array_sort, array, start, end);
+
+        start += blksz;
+        end += blksz;
+    }
+    thrds[thrdcnt - 1] = std::thread(array_sort, array, start, size - 1);
+
+    for (int i = 0; i < thrdcnt; i++) {
+        thrds[i].join();
+    }
+
+    parallel_merge(array, size, thrds, thrdcnt, blksz);
+
+    delete[] thrds;
 }
 
 
