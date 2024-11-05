@@ -117,6 +117,5 @@ void start(unsigned time, unsigned max_speed)
     t1.join();
     t2.join();
 
-    std::cout << m1.d << ' ' << m1.f << std::endl;
-    std::cout << m2.d << ' ' << m2.f << std::endl;
+    std::cout << (m1.d + m2.d) / 2 << ' ' << (m1.f + m2.f) / 2 << std::endl;
 }
