@@ -37,7 +37,8 @@ void matrix_print(double **matrix, int size)
 #endif
 
 
-static void matrix_product(double *result, double **matrix, double *array, int size)
+static void matrix_product(double *result, double **matrix,
+        double *array, int size)
 {
 #pragma omp parallel for
     for (int i = 0; i < size; i++) {
@@ -101,6 +102,7 @@ static double **matrix_reverse(double **matrix, int size)
     }
 
     double determinant = matrix_calculate_determinant(matrix, size);
+#pragma omp parallel for
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             double **submatrix = matrix_submatrix(matrix, size, i, j);
