@@ -88,3 +88,25 @@ static int **matrix_submatrix(int **matrix, int size, int row, int col)
 
     return submatrix;
 }
+
+
+static int matrix_calculate_determinant(int **matrix, int size)
+{
+    if (size == 1) {
+        return matrix[0][0];
+    }
+    if (size == 2) {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
+
+    int result = 0;
+    for (int i = 0, sign = 1; i < size; i++, sign = -sign) {
+        int **submatrix = matrix_submatrix(matrix, size, i, 0);
+
+        result += sign * matrix[i][0] * 
+            matrix_calculate_determinant(submatrix, size - 1);
+
+        matrix_delete(submatrix, size - 1);
+    }
+    return result;
+}
