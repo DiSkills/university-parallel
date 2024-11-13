@@ -51,3 +51,15 @@ void matrix_product(int **matrix, int *array, int size)
 #endif
     delete[] result;
 }
+
+
+static void matrix_transpose(int **matrix, int size)
+{
+    for (int i = 1; i < size; i++) {
+        for (int j = 0; j < i; j++) {
+            int tmp = matrix[i][j];
+            matrix[i][j] = matrix[j][i];
+            matrix[j][i] = tmp;
+        }
+    }
+}
