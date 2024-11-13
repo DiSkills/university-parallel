@@ -63,3 +63,28 @@ static void matrix_transpose(int **matrix, int size)
         }
     }
 }
+
+
+static int **matrix_submatrix(int **matrix, int size, int row, int col)
+{
+    int **submatrix = new int*[size - 1];
+
+    for (int i = 0, ni = 0; i < size; i++) {
+        if (i == row) {
+            continue;
+        }
+
+        submatrix[ni] = new int[size - 1];
+        for (int j = 0, nj = 0; j < size; j++) {
+            if (j == col) {
+                continue;
+            }
+
+            submatrix[ni][nj] = matrix[i][j];
+            nj++;
+        }
+        ni++;
+    }
+
+    return submatrix;
+}
