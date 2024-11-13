@@ -25,9 +25,16 @@ int main()
     std::cout << std::endl;
 #endif
 
-    matrix_product(matrix, array, n);
+    int *result = calculate(matrix, array, n);
+
+#ifdef DEBUG
+    std::cout << std::endl;
+    array_print(result, n);
+    std::cout << std::endl;
+#endif
 
     matrix_delete(matrix, n);
     delete[] array;
+    delete[] result;
     return 0; 
 }

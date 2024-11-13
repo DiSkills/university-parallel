@@ -3,7 +3,7 @@ OBJMODULES = $(SRCMODULES:.cpp=.o)
 
 CXX = g++
 CXXFLAGS = -ggdb -Wall -fopenmp
-# CXXFLAGS += -DDEBUG
+CXXFLAGS += -DDEBUG
 
 %.o: %.cpp %.hpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

@@ -37,30 +37,11 @@ void matrix_print(int **matrix, int size)
 #endif
 
 
-void matrix_product(int **matrix, int *array, int size)
+static void matrix_product(int *result, int **matrix, int *array, int size)
 {
-    int *result = new int[size];
-
 #pragma omp parallel for
     for (int i = 0; i < size; i++) {
         result[i] = array_scalar(matrix[i], array, size);
-    }
-
-#ifdef DEBUG
-    array_print(result, size);
-#endif
-    delete[] result;
-}
-
-
-static void matrix_transpose(int **matrix, int size)
-{
-    for (int i = 1; i < size; i++) {
-        for (int j = 0; j < i; j++) {
-            int tmp = matrix[i][j];
-            matrix[i][j] = matrix[j][i];
-            matrix[j][i] = tmp;
-        }
     }
 }
 
@@ -108,5 +89,43 @@ static int matrix_calculate_determinant(int **matrix, int size)
 
         matrix_delete(submatrix, size - 1);
     }
+    return result;
+}
+
+
+static int **matrix_reverse(int **matrix, int size)
+{
+    int **reverse = new int*[size];
+    for (int i = 0; i < size; i++) {
+        reverse[i] = new int[size];
+    }
+
+    int determinant = matrix_calculate_determinant(matrix, size);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            int **submatrix = matrix_submatrix(matrix, size, i, j);
+
+            reverse[j][i] = matrix_calculate_determinant(submatrix, size - 1)
+                / determinant;
+            if ((i + j) % 2 != 0) {
+                reverse[j][i] = -reverse[j][i];
+            }
+
+            matrix_delete(submatrix, size - 1);
+        }
+    }
+
+    return reverse;
+}
+
+
+int *calculate(int **matrix, int *array, int size)
+{
+    int *result = new int[size];
+    int **reverse = matrix_reverse(matrix, size);
+
+    matrix_product(result, reverse, array, size);
+
+    matrix_delete(reverse, size);
     return result;
 }
