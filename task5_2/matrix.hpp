@@ -1,9 +1,9 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
-int **matrix_generate(int size);
-void matrix_delete(int **matrix, int size);
-void matrix_print(int **matrix, int size);
-int *calculate(int **matrix, int *array, int size);
+double **matrix_generate(int size);
+void matrix_delete(double **matrix, int size);
+void matrix_print(double **matrix, int size);
+double *calculate(double **matrix, double *array, int size);
 
 #endif

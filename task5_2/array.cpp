@@ -7,9 +7,9 @@
 #include "array.hpp"
 
 
-int *array_generate(int size)
+double *array_generate(int size)
 {
-    int *array = new int[size];
+    double *array = new double[size];
 
     for (int i = 0; i < size; i++) {
         array[i] = rand() % 100 - 50;
@@ -19,9 +19,9 @@ int *array_generate(int size)
 }
 
 
-int array_scalar(int *a, int *b, int size)
+double array_scalar(double *a, double *b, int size)
 {
-    int r = 0;
+    double r = 0;
     for (; size; size--) {
         r += a[size - 1] * b[size - 1];
     }
@@ -30,7 +30,7 @@ int array_scalar(int *a, int *b, int size)
 
 
 #ifdef DEBUG
-void array_print(int *array, int size)
+void array_print(double *array, int size)
 {
     for (int i = 0; i < size; i++) {
         std::cout << array[i] << ' ';

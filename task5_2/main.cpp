@@ -7,7 +7,7 @@
 
 int main()
 {
-    int n, **matrix, *array;
+    double n, **matrix, *array;
 
     srand(time(NULL));
 
@@ -25,7 +25,7 @@ int main()
     std::cout << std::endl;
 #endif
 
-    int *result = calculate(matrix, array, n);
+    double *result = calculate(matrix, array, n);
 
 #ifdef DEBUG
     std::cout << std::endl;
