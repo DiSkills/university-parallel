@@ -12,5 +12,6 @@ void graph_init(struct graph *g, int n);
 void graph_del(struct graph *g);
 void graph_print(const struct graph *g);
 void graph_isomorphic(const struct graph *g, struct graph *h);
+bool graph_is_isomorphic(struct graph *g, struct graph *h);
 
 #endif
